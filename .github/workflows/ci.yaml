@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Build & Verify (Typst ${{ steps.meta.outputs.compiler }})
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read typst.toml metadata
+        id: meta
+        run: |
+          echo "compiler=$(sed -n 's/^compiler = "\(.*\)"/\1/p' typst.toml)" >> "$GITHUB_OUTPUT"
+
+      - name: Install Typst ${{ steps.meta.outputs.compiler }} & just
+        run: |
+          mkdir -p "$HOME/.local/bin"
+          curl -fsSL "https://github.com/typst/typst/releases/download/v${{ steps.meta.outputs.compiler }}/typst-x86_64-unknown-linux-musl.tar.xz" \
+            | tar -xJ -C "$HOME/.local/bin" --strip-components=1 "typst-x86_64-unknown-linux-musl/typst"
+          curl -fsSL "https://just.systems/install.sh" | bash -s -- --to "$HOME/.local/bin"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Run full check suite
+        run: just check

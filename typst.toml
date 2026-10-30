@@ -1,0 +1,22 @@
+[package]
+name = "typica"
+version = "0.1.0"
+entrypoint = "src/lib.typ"
+authors = ["Basil Feitknecht <https://0xbf.ch>"]
+license = "MIT AND MIT-0"
+description = "Monochrome HTML blog bundles with math boxes and sidenotes."
+repository = "https://github.com/bfeitknecht/typica"
+compiler = "0.15.1"
+keywords = ["blog", "sidenotes", "margin", "html", "bundle", "website", "math"]
+categories = ["layout", "components", "model"]
+disciplines = ["computer-science", "mathematics"]
+exclude = [
+  "/assets/",
+  "/docs/",
+  "/examples/",
+]
+
+[template]
+path = "template"
+entrypoint = "site.typ"
+thumbnail = "thumbnail.png"
